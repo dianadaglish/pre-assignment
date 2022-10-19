@@ -19,12 +19,15 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.data:spring-data-cassandra:3.4.5'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+	implementation 'org.modelmapper:modelmapper:3.1.0'
+
 }
 
 tasks.named('test') {
