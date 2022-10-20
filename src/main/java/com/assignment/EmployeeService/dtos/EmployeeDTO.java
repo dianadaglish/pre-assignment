@@ -11,4 +11,7 @@ public class EmployeeDTO {
     private String name;
     private String city;
     private String phone;
+    private double javaExperience;
+    private double springExperience;
+    private String status;
 }

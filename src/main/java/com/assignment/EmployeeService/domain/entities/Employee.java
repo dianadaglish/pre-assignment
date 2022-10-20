@@ -1,5 +1,6 @@
 package com.assignment.EmployeeService.domain.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -9,6 +10,7 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @Table("emp")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Employee {
     @PrimaryKey("emp_id")
     private int id;
@@ -18,5 +20,6 @@ public class Employee {
     private String city;
     @Column("emp_phone")
     private String phone;
+
 
 }
