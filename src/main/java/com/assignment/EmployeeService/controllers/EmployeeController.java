@@ -4,6 +4,7 @@ import com.assignment.EmployeeService.domain.entities.Employee;
 import com.assignment.EmployeeService.domain.entities.Skill;
 import com.assignment.EmployeeService.domain.services.EmployeeService;
 import com.assignment.EmployeeService.dtos.EmployeeDTO;
+import com.assignment.EmployeeService.dtos.SkillDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,14 +21,16 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
+
     @PostMapping(value = "/createEmployee", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<ResponseEntity<EmployeeDTO>> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        Employee employee = new Employee(employeeDTO.getId(), employeeDTO.getName(), employeeDTO.getCity(), employeeDTO.getPhone());
-        Skill skill = new Skill(employeeDTO.getId(), employeeDTO.getJavaExperience(), employeeDTO.getSpringExperience());
-        Mono<Employee> result = employeeService.getEmployeeByID(employeeDTO.getId());
-        employeeService.createEmployee(employee).then(employeeService.createSkill(skill));
+    public Mono<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+       return employeeService.createEmployee(employeeDTO);
+    }
 
+    @PostMapping(value = "/findEmpSkillset", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<ResponseEntity<EmployeeDTO>> findEmpSkills(@RequestBody SkillDTO skill) {
         return null;
     }
 }

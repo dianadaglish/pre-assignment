@@ -11,11 +11,8 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @AllArgsConstructor
 @Table("emp_skill")
 public class Skill {
-    @PrimaryKey("emp_id")
-    private int employeeId;
-    @PrimaryKey("java_exp")
-    private double javaExp;
-    @PrimaryKey("spring_exp")
-    private double springExp;
+    @PrimaryKey
+    private SkillPK skillPK;
+
 
 }
