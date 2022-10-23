@@ -17,12 +17,12 @@ import static org.springframework.data.cassandra.core.cql.PrimaryKeyType.PARTITI
 public class SkillPK implements Serializable {
 
         @PrimaryKeyColumn(name = "emp_id", type = PARTITIONED)
-        private int employeeId;
+        private int id;
 
         @PrimaryKeyColumn(name = "java_exp")
-        private double javaExp;
+        private double javaExperience;
 
         @PrimaryKeyColumn(name = "spring_exp")
-        private double springExp;
+        private double springExperience;
 
 }

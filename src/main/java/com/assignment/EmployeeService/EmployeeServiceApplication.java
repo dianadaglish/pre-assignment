@@ -1,5 +1,8 @@
 package com.assignment.EmployeeService;
 
+import com.assignment.EmployeeService.dtos.EmployeeDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,11 +22,5 @@ public class EmployeeServiceApplication {
 		return new ModelMapper();
 	}
 
-//	@Bean
-//	public ApplicationRunner runner(KafkaTemplate<String, String> template) {
-//		return args -> {
-//			template.send("app_update", "test");
-//		};
-//	}
 
 }

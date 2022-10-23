@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import static com.assignment.EmployeeService.utils.EntityDtoUtil.toDto;
-import static com.assignment.EmployeeService.utils.EntityDtoUtil.toEntity;
+import static com.assignment.EmployeeService.utils.EntityDtoUtil.*;
 
 @Service
 public class EmployeeService {
@@ -30,9 +29,16 @@ public class EmployeeService {
 
     public Mono<EmployeeDTO> createEmployee(EmployeeDTO employee) {
         return Mono.just(employee)
-                .map(EntityDtoUtil::toEntity)
-                .flatMap(employeeRepository::save)
-                .map(EntityDtoUtil::toDto);
+                .flatMap(emp -> {Employee empEntity = toEmployeeEntity(emp);
+                                Skill skill = toSkillEntity(emp);
+                                Mono<Employee> monoEmp =  employeeRepository.save(empEntity);
+                                Mono<Skill> monoSkill = skillRepository.save(skill);
+                                return Mono.zip(monoEmp, monoSkill);})
+                .flatMap(result -> { EmployeeDTO empDto = toDto(result.getT1(), "CREATED");
+                                    empDto.setJavaExperience(result.getT2().getSkillPK().getJavaExperience());
+                                    empDto.setSpringExperience(result.getT2().getSkillPK().getSpringExperience());
+                    return Mono.just(empDto);});
+
 
     }
 

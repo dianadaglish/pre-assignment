@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SkillDTO {
+public class ExperienceDTO {
     private double javaExperience;
     private double springExperience;
 }
