@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaProducer {
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, EmployeeDTO> kafkaTemplate;
 
     @Value(value = "${topic.name}")
     private String topicName;
 
-    public void sendMessage(String employee) {
+    public void sendMessage(EmployeeDTO employee) {
         kafkaTemplate.send(topicName, employee);
     }
 }
