@@ -1,6 +1,7 @@
 package com.assignment.EmployeeService.kafka;
 
 import com.assignment.EmployeeService.dtos.EmployeeDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.header.Headers;
@@ -18,6 +19,7 @@ public class EmployeeSerializer implements Serializer <EmployeeDTO>{
 
     @Override
     public byte[] serialize(String topic, EmployeeDTO data) {
+        objectMapper.addMixIn(EmployeeDTO.class, MixIn.class);
         try {
             if (data == null) {
                 return null;
@@ -32,5 +34,10 @@ public class EmployeeSerializer implements Serializer <EmployeeDTO>{
     @Override
     public void close() {
 
+    }
+
+    abstract  class MixIn{
+        @JsonIgnore
+        String status;
     }
 }

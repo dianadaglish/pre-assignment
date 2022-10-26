@@ -38,18 +38,20 @@ public class EmployeeController {
     @PostMapping(value = "/createEmployee", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Mono<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-       return employeeService.createEmployee(employeeDTO);//.doOnSuccess(p -> {messageProducer.sendMessage(p);});
+       return employeeService.createEmployee(employeeDTO).doOnSuccess(p -> {messageProducer.sendMessage(p);});
     }
 
     @PostMapping(value = "/findEmpSkillset", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Flux<EmployeeDTO> findEmpSkills(@RequestBody ExperienceDTO skill) {
-        return skillRepository.findBySkillPKJavaExperienceGreaterThan(skill.getJavaExperience())
+         return skillRepository.findBySkillPKJavaExperienceGreaterThan(skill.getJavaExperience())
                 .flatMap(p -> {
-                    return employeeService.getEmployeeByID(p.getSkillPK().getId()).doOnSuccess(emp -> {emp.setJavaExperience(p.getSkillPK().getJavaExperience());
-                    emp.setSpringExperience(p.getSkillPK().getSpringExperience());});
-                })
-                ;
+                    return Mono.zip(employeeService.getEmployeeByID(p.getSkillPK().getId()), Mono.just(p));
+                }).flatMap (result -> {EmployeeDTO dto = result.getT1();
+                    dto.setJavaExperience(result.getT2().getSkillPK().getJavaExperience());
+                    dto.setSpringExperience(result.getT2().getSkillPK().getSpringExperience());
+                    return Flux.just(dto);
+                });
 
     }
 }

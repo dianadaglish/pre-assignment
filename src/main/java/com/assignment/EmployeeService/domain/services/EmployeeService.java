@@ -31,14 +31,20 @@ public class EmployeeService {
 
         return Mono.just(employee)
                 .flatMap(emp -> {Employee empEntity = toEmployeeEntity(emp);
-                                Skill skill = toSkillEntity(emp);
-                                Mono<Employee> monoEmp =  employeeRepository.save(empEntity);
-                                Mono<Skill> monoSkill = skillRepository.save(skill);
-                                return Mono.zip(monoEmp, monoSkill);})
+                    Skill skill = toSkillEntity(emp);
+                    Mono<Boolean> monoExists = employeeRepository.existsById(empEntity.getId());
+                    Mono<Employee> monoEmp =  employeeRepository.save(empEntity);
+                    Mono<Skill> monoSkill = skillRepository.save(skill);
+                    return Mono.zip(monoEmp, monoSkill, monoExists);})
                 .flatMap(result -> {
-                                    EmployeeDTO empDto = toDto(result.getT1(), "CREATED");
-                                    empDto.setJavaExperience(result.getT2().getSkillPK().getJavaExperience());
-                                    empDto.setSpringExperience(result.getT2().getSkillPK().getSpringExperience());
+                    EmployeeDTO empDto = null;
+                    if(result.getT3()) {
+                        empDto = toDto(result.getT1(), "ALREADY_EXISTS");
+                    } else {
+                        empDto = toDto(result.getT1(), "CREATED");
+                    }
+                    empDto.setJavaExperience(result.getT2().getSkillPK().getJavaExperience());
+                    empDto.setSpringExperience(result.getT2().getSkillPK().getSpringExperience());
                     return Mono.just(empDto);});
 
 

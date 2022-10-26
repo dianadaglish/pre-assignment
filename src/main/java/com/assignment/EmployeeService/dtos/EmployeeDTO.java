@@ -22,7 +22,7 @@ public class EmployeeDTO {
     private String phone;
     @JsonProperty("java_exp")
     private double javaExperience;
-    @JsonProperty("spring_ex")
+    @JsonProperty("spring_exp")
     private double springExperience;
 
     @JsonInclude(Include.NON_NULL)
