@@ -21,11 +21,6 @@ public class EmployeeService {
     @Autowired
     SkillRepository skillRepository;
 
-    public Mono<Employee> createEmployee(Employee employee) {
-        Mono<Employee> savedEmp =  employeeRepository.save(employee);
-        savedEmp.subscribe();
-        return savedEmp;
-    }
 
     public Mono<EmployeeDTO> createEmployee(EmployeeDTO employee) {
 
