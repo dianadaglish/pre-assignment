@@ -41,8 +41,7 @@ public class EmployeeService {
                 .flatMap(result -> {
                     EmployeeDTO empDto = result.getT3();
                     BeanUtils.copyProperties(result.getT1(), empDto);
-                    empDto.setJavaExperience(result.getT2().getSkillPK().getJavaExperience());
-                    empDto.setSpringExperience(result.getT2().getSkillPK().getSpringExperience());
+                    BeanUtils.copyProperties(result.getT2(), empDto);
                     return Mono.just(empDto);}
 
                 );

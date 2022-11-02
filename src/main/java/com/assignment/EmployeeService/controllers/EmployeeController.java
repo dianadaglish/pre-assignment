@@ -44,12 +44,12 @@ public class EmployeeController {
     @PostMapping(value = "/findEmpSkillset", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public Flux<EmployeeDTO> findEmpSkills(@RequestBody ExperienceDTO skill) {
-         return skillRepository.findBySkillPKJavaExperienceGreaterThan(skill.getJavaExperience())
+         return skillRepository.findByJavaExperienceGreaterThan(skill.getJavaExperience())
                 .flatMap(p -> {
-                    return Mono.zip(employeeService.getEmployeeByID(p.getSkillPK().getId()), Mono.just(p));
+                    return Mono.zip(employeeService.getEmployeeByID(p.getId()), Mono.just(p));
                 }).flatMap (result -> {EmployeeDTO dto = result.getT1();
-                    dto.setJavaExperience(result.getT2().getSkillPK().getJavaExperience());
-                    dto.setSpringExperience(result.getT2().getSkillPK().getSpringExperience());
+                    dto.setJavaExperience(result.getT2().getJavaExperience());
+                    dto.setSpringExperience(result.getT2().getSpringExperience());
                     return Flux.just(dto);
                 });
 

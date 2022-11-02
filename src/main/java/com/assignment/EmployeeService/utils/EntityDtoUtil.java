@@ -2,7 +2,6 @@ package com.assignment.EmployeeService.utils;
 
 import com.assignment.EmployeeService.domain.entities.Employee;
 import com.assignment.EmployeeService.domain.entities.Skill;
-import com.assignment.EmployeeService.domain.entities.SkillPK;
 import com.assignment.EmployeeService.dtos.EmployeeDTO;
 import org.springframework.beans.BeanUtils;
 
@@ -28,10 +27,8 @@ public class EntityDtoUtil {
     }
 
     public static Skill toSkillEntity(EmployeeDTO dto) {
-        SkillPK pk = new SkillPK();
         Skill skill = new Skill();
-        BeanUtils.copyProperties(dto, pk);
-        skill.setSkillPK(pk);
+        BeanUtils.copyProperties(dto, skill);
         return skill;
     }
 
