@@ -6,6 +6,7 @@ import com.assignment.EmployeeService.dtos.EmployeeDTO;
 import com.assignment.EmployeeService.repository.EmployeeRepository;
 import com.assignment.EmployeeService.repository.SkillRepository;
 import com.assignment.EmployeeService.utils.EntityDtoUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -23,25 +24,28 @@ public class EmployeeService {
 
 
     public Mono<EmployeeDTO> createEmployee(EmployeeDTO employee) {
-
-        return Mono.just(employee)
-                .flatMap(emp -> {Employee empEntity = toEmployeeEntity(emp);
-                    Skill skill = toSkillEntity(emp);
-                    Mono<Boolean> monoExists = employeeRepository.existsById(empEntity.getId());
+        EmployeeDTO empResponse;
+        return employeeRepository.existsById(employee.getId())
+                .flatMap(empExists -> {
+                    EmployeeDTO response = new EmployeeDTO();
+                    Employee empEntity = toEmployeeEntity(employee);
+                    Skill skill = toSkillEntity(employee);
+                    if (empExists) {
+                        response.setStatus("ALREADY_EXISTS");
+                    } else {
+                        response.setStatus("CREATED");
+                    }
                     Mono<Employee> monoEmp =  employeeRepository.save(empEntity);
                     Mono<Skill> monoSkill = skillRepository.save(skill);
-                    return Mono.zip(monoEmp, monoSkill, monoExists);})
+                    return Mono.zip(monoEmp, monoSkill, Mono.just(response));})
                 .flatMap(result -> {
-                    EmployeeDTO empDto = null;
-                    if(result.getT3()) {
-                        empDto = toDto(result.getT1(), "ALREADY_EXISTS");
-                    } else {
-                        empDto = toDto(result.getT1(), "CREATED");
-                    }
+                    EmployeeDTO empDto = result.getT3();
+                    BeanUtils.copyProperties(result.getT1(), empDto);
                     empDto.setJavaExperience(result.getT2().getSkillPK().getJavaExperience());
                     empDto.setSpringExperience(result.getT2().getSkillPK().getSpringExperience());
-                    return Mono.just(empDto);});
+                    return Mono.just(empDto);}
 
+                );
 
     }
 
